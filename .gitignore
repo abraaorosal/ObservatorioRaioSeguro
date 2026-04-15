@@ -1,0 +1,13 @@
+node_modules
+dist
+.vite
+.DS_Store
+
+# Dataset real (evita publicar acidentalmente)
+/sinistro_transito.json
+
+# Arquivo duplicado local
+package-lock 2.json
+
+# Artefatos locais
+test-results/

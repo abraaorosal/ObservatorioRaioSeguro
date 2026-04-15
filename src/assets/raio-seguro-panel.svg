@@ -1,0 +1,31 @@
+<svg width="520" height="260" viewBox="0 0 520 260" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Marca institucional RAIO Seguro</title>
+  <desc id="desc">Composição visual abstrata com escudo, linhas de monitoramento e referência institucional.</desc>
+  <rect width="520" height="260" rx="8" fill="#08261D"/>
+  <path d="M0 0H520V260H0V0Z" fill="url(#paint0_linear)"/>
+  <path d="M56 50H464V210H56V50Z" fill="#083326" fill-opacity="0.72"/>
+  <path d="M56 50H464V82H56V50Z" fill="#009B3A" fill-opacity="0.82"/>
+  <path d="M56 206H464V212H56V206Z" fill="#F26A21"/>
+  <path d="M92 116H196V185H92V116Z" fill="#FFFFFF" fill-opacity="0.11"/>
+  <path d="M222 116H428V185H222V116Z" fill="#FFFFFF" fill-opacity="0.11"/>
+  <path d="M110 64H158V68H110V64Z" fill="#F26A21"/>
+  <path d="M178 64H254V68H178V64Z" fill="#FFFFFF" fill-opacity="0.5"/>
+  <path d="M276 64H398V68H276V64Z" fill="#FFFFFF" fill-opacity="0.3"/>
+  <path d="M120 137L144 123L168 137V161C168 173 158 183 144 190C130 183 120 173 120 161V137Z" fill="#F26A21"/>
+  <path d="M144 132V178" stroke="#08261D" stroke-width="5" stroke-linecap="square"/>
+  <path d="M132 151H156" stroke="#08261D" stroke-width="5" stroke-linecap="square"/>
+  <path d="M245 171L274 145L304 160L337 130L367 146L407 111" stroke="#F26A21" stroke-width="5" stroke-linecap="square"/>
+  <path d="M245 190H414" stroke="#FFFFFF" stroke-opacity="0.32" stroke-width="3"/>
+  <path d="M245 154H414" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="3"/>
+  <path d="M245 118H414" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="3"/>
+  <circle cx="274" cy="145" r="5" fill="#FFFFFF"/>
+  <circle cx="337" cy="130" r="5" fill="#FFFFFF"/>
+  <circle cx="407" cy="111" r="5" fill="#FFFFFF"/>
+  <defs>
+    <linearGradient id="paint0_linear" x1="0" y1="0" x2="520" y2="260" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#009B3A"/>
+      <stop offset="0.62" stop-color="#14A978"/>
+      <stop offset="1" stop-color="#5FC8C4"/>
+    </linearGradient>
+  </defs>
+</svg>
