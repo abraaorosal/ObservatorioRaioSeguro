@@ -14,4 +14,6 @@ npm run dev
 
 ## Dados
 
-O dashboard le `public/sinistro_transito.json`. Para usar a base real, substitua esse arquivo pelo JSON institucional.
+O dashboard le `public/sinistro_transito.json`.
+
+Observacao: tudo o que estiver em `public/` vai para o ar no GitHub Pages. Se a base institucional tiver dados sensiveis, sanitize antes de publicar.
