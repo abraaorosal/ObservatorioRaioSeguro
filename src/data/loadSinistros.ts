@@ -2,8 +2,9 @@ import type { NormalizedSinistro, SinistroWorkbook } from '../types/sinistro';
 import { normalizeSinistro } from '../utils/normalization';
 
 export async function loadSinistrosFromWorkbook(): Promise<{ records: NormalizedSinistro[]; rawCount: number }> {
-  const datasetUrl = new URL('sinistro_transito.json', import.meta.env.BASE_URL);
-  const response = await fetch(datasetUrl.toString(), { cache: 'no-store' });
+  // BASE_URL is usually a path (e.g. "/ObservatorioRaioSeguro/") on GitHub Pages, not an absolute URL.
+  const datasetPath = `${import.meta.env.BASE_URL}sinistro_transito.json`;
+  const response = await fetch(datasetPath, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error('Não foi possível localizar o arquivo sinistro_transito.json (pasta public).');
   }
