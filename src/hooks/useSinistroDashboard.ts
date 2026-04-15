@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { EMPTY_FILTERS, NO_LABEL, NOT_INFORMED, YES_LABEL } from '../constants/filters';
-import { loadSinistrosFromWorkbook } from '../data/loadSinistros';
+import { loadSinistrosFromFile, loadSinistrosFromWorkbook } from '../data/loadSinistros';
 import type { FilterState, NormalizedSinistro } from '../types/sinistro';
 import {
   buildStrategicInsights,
@@ -23,40 +23,77 @@ export function useSinistroDashboard() {
   const [records, setRecords] = useState<NormalizedSinistro[]>([]);
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [rawCount, setRawCount] = useState(0);
+  const [datasetLabel, setDatasetLabel] = useState('Demo (public/sinistro_transito.json)');
+  const [datasetSource, setDatasetSource] = useState<'public' | 'file'>('public');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isMountedRef = useRef(true);
 
-  useEffect(() => {
-    let isMounted = true;
+  const loadPublicDataset = () => {
+    setLoading(true);
+    setError(null);
 
-    Promise.resolve()
-      .then(() => loadSinistrosFromWorkbook())
+    return loadSinistrosFromWorkbook()
       .then(({ records: loadedRecords, rawCount: loadedRawCount }) => {
-        if (!isMounted) {
+        if (!isMountedRef.current) {
           return;
         }
-
         setRecords(loadedRecords);
         setRawCount(loadedRawCount);
-        setError(null);
+        setDatasetSource('public');
+        setDatasetLabel('Demo (public/sinistro_transito.json)');
       })
       .catch((cause: unknown) => {
-        if (!isMounted) {
+        if (!isMountedRef.current) {
           return;
         }
-
         setError(cause instanceof Error ? cause.message : 'Não foi possível processar o arquivo JSON.');
+        setRecords([]);
+        setRawCount(0);
       })
       .finally(() => {
-        if (isMounted) {
+        if (isMountedRef.current) {
           setLoading(false);
         }
       });
+  };
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    loadPublicDataset().catch(() => {});
 
     return () => {
-      isMounted = false;
+      isMountedRef.current = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const loadDatasetFromFile = (file: File) => {
+    setLoading(true);
+    setError(null);
+
+    return loadSinistrosFromFile(file)
+      .then(({ records: loadedRecords, rawCount: loadedRawCount, label }) => {
+        if (!isMountedRef.current) {
+          return;
+        }
+        setRecords(loadedRecords);
+        setRawCount(loadedRawCount);
+        setDatasetSource('file');
+        setDatasetLabel(label);
+      })
+      .catch((cause: unknown) => {
+        if (!isMountedRef.current) {
+          return;
+        }
+        setError(cause instanceof Error ? cause.message : 'Não foi possível processar o arquivo enviado.');
+      })
+      .finally(() => {
+        if (isMountedRef.current) {
+          setLoading(false);
+        }
+      });
+  };
 
   const filteredRecords = useMemo(() => filterRecords(records, filters), [records, filters]);
 
@@ -160,5 +197,12 @@ export function useSinistroDashboard() {
     insights,
     updateFilter,
     clearFilters,
+    dataset: {
+      source: datasetSource,
+      label: datasetLabel,
+      rawCount,
+    },
+    loadDatasetFromFile,
+    loadPublicDataset,
   };
 }

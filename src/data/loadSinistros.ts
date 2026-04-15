@@ -1,5 +1,20 @@
-import type { NormalizedSinistro, SinistroWorkbook } from '../types/sinistro';
+import type { NormalizedSinistro, RawSinistro, SinistroWorkbook } from '../types/sinistro';
 import { normalizeSinistro } from '../utils/normalization';
+
+function extractSinistroRecords(workbook: SinistroWorkbook): RawSinistro[] | undefined {
+  const direct = workbook.sheets?.sinistro_transito;
+  if (Array.isArray(direct)) {
+    return direct;
+  }
+
+  const nested = (workbook.workbook as { sheets?: { sinistro_transito?: RawSinistro[] } } | undefined)?.sheets
+    ?.sinistro_transito;
+  if (Array.isArray(nested)) {
+    return nested;
+  }
+
+  return undefined;
+}
 
 export async function loadSinistrosFromWorkbook(): Promise<{ records: NormalizedSinistro[]; rawCount: number }> {
   // BASE_URL is usually a path (e.g. "/ObservatorioRaioSeguro/") on GitHub Pages, not an absolute URL.
@@ -10,11 +25,25 @@ export async function loadSinistrosFromWorkbook(): Promise<{ records: Normalized
   }
 
   const workbook = (await response.json()) as SinistroWorkbook;
-  const rawRecords = workbook.sheets?.sinistro_transito;
+  const rawRecords = extractSinistroRecords(workbook);
 
   if (!Array.isArray(rawRecords)) {
-    throw new Error('A planilha sinistro_transito não foi localizada no arquivo JSON.');
+    throw new Error('A planilha sinistro_transito não foi localizada no JSON (sheets.sinistro_transito).');
   }
 
   return { records: rawRecords.map(normalizeSinistro), rawCount: rawRecords.length };
+}
+
+export async function loadSinistrosFromFile(
+  file: File,
+): Promise<{ records: NormalizedSinistro[]; rawCount: number; label: string }> {
+  const text = await file.text();
+  const workbook = JSON.parse(text) as SinistroWorkbook;
+  const rawRecords = extractSinistroRecords(workbook);
+
+  if (!Array.isArray(rawRecords)) {
+    throw new Error('A planilha sinistro_transito não foi localizada no JSON enviado.');
+  }
+
+  return { records: rawRecords.map(normalizeSinistro), rawCount: rawRecords.length, label: file.name };
 }

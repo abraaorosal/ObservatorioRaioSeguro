@@ -2,6 +2,7 @@ import { AlertOctagon } from 'lucide-react';
 import { EmptyState } from '../components/EmptyState';
 import { FilterBar } from '../components/FilterBar';
 import { InstitutionalHeader } from '../components/InstitutionalHeader';
+import { DatasetSourceBar } from '../components/DatasetSourceBar';
 import { LoadingState } from '../components/LoadingState';
 import { SectionNav } from '../components/SectionNav';
 import { useSinistroDashboard } from '../hooks/useSinistroDashboard';
@@ -30,6 +31,9 @@ export function DashboardPage() {
     insights,
     updateFilter,
     clearFilters,
+    dataset,
+    loadDatasetFromFile,
+    loadPublicDataset,
   } = useSinistroDashboard();
 
   if (loading) {
@@ -44,8 +48,8 @@ export function DashboardPage() {
           <h1 className="text-2xl font-bold text-institutional-ink">Falha na leitura dos dados</h1>
           <p className="mt-3 text-sm leading-6 text-institutional-steel">{error}</p>
           <p className="mt-3 text-sm leading-6 text-institutional-steel">
-            Confirme se o arquivo sinistro_transito.json está na raiz do projeto e mantém a estrutura
-            workbook/sheets/sinistro_transito.
+            No GitHub Pages, o dashboard lê `public/sinistro_transito.json` ou permite enviar um JSON local
+            pela opção "Carregar JSON".
           </p>
         </div>
       </main>
@@ -62,6 +66,13 @@ export function DashboardPage() {
       />
       <SectionNav />
       <main className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:gap-8 sm:py-8 md:px-6">
+        <DatasetSourceBar
+          source={dataset.source}
+          label={dataset.label}
+          rawCount={dataset.rawCount}
+          onLoadFile={(file) => loadDatasetFromFile(file)}
+          onReset={() => loadPublicDataset()}
+        />
         <FilterBar filters={filters} options={options} onChange={updateFilter} onClear={clearFilters} />
 
         {filteredRecords.length ? (
